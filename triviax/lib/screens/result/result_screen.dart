@@ -1,9 +1,10 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:confetti/confetti.dart';
-import '../../providers/quiz_provider.dart';
+
 import '../../config/app_routes.dart';
+import '../../providers/quiz/quiz_provider.dart';
 
 class ResultScreen extends ConsumerStatefulWidget {
   const ResultScreen({super.key});
@@ -18,7 +19,8 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    _confettiController =
+        ConfettiController(duration: const Duration(seconds: 3));
     final quizState = ref.read(quizProvider);
     if (quizState.score > 50) {
       _confettiController.play();
@@ -88,7 +90,8 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                     icon: const Icon(Icons.home_rounded),
                     label: const Text('Back to Home'),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32, vertical: 16),
                     ),
                   ),
                 ],
@@ -134,7 +137,9 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
           const SizedBox(width: 16),
           Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
           const Spacer(),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          Text(value,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         ],
       ),
     );

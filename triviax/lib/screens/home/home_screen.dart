@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import '../../config/app_routes.dart';
-import '../../providers/quiz_provider.dart';
+import '../../providers/quiz/quiz_provider.dart';
+import 'widgets/category_card.dart';
+import 'widgets/difficulty_button.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -47,14 +49,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               const Text('Test Your Knowledge, Challenge Your Mind'),
               const Spacer(),
-              _buildCategoryCard(
+              CategoryCard(
                 title: 'Quick Play',
                 subtitle: 'Random questions from the API',
                 icon: Icons.play_arrow_rounded,
                 onTap: () => _showDifficultyPicker(context),
               ),
               const SizedBox(height: 16),
-              _buildCategoryCard(
+              CategoryCard(
                 title: 'Custom Quiz',
                 subtitle: 'Play user-created questions',
                 icon: Icons.dashboard_customize_rounded,
@@ -86,47 +88,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildCategoryCard({
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return Card(
-      elevation: 0,
-      color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.5),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: Icon(icon, color: Colors.white),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18)),
-                    Text(subtitle,
-                        style: Theme.of(context).textTheme.bodySmall),
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right_rounded),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void _showDifficultyPicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -144,9 +105,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _difficultyButton('Easy', Colors.green, 'easy'),
-                  _difficultyButton('Medium', Colors.orange, 'medium'),
-                  _difficultyButton('Hard', Colors.red, 'hard'),
+                  DifficultyButton(
+                    label: 'Easy',
+                    color: Colors.green,
+                    onTap: () => _handleDifficultySelection('easy'),
+                  ),
+                  DifficultyButton(
+                    label: 'Medium',
+                    color: Colors.orange,
+                    onTap: () => _handleDifficultySelection('medium'),
+                  ),
+                  DifficultyButton(
+                    label: 'Hard',
+                    color: Colors.red,
+                    onTap: () => _handleDifficultySelection('hard'),
+                  ),
                 ],
               ),
               const SizedBox(height: 24),
@@ -157,25 +130,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _difficultyButton(String label, Color color, String value) {
-    return Column(
-      children: [
-        IconButton.filled(
-          onPressed: () {
-            Get.back();
-            ref.read(quizProvider.notifier).startApiQuiz(value);
-            Get.toNamed(AppRoutes.quiz);
-          },
-          icon: const Icon(Icons.bolt_rounded),
-          style: IconButton.styleFrom(
-            backgroundColor: color.withOpacity(0.2),
-            foregroundColor: color,
-            padding: const EdgeInsets.all(16),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(label),
-      ],
-    );
+  void _handleDifficultySelection(String value) {
+    Get.back();
+    ref.read(quizProvider.notifier).startApiQuiz(value);
+    Get.toNamed(AppRoutes.quiz);
   }
 }
