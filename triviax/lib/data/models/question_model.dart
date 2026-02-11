@@ -16,15 +16,21 @@ class Question {
     required this.question,
     required this.correctAnswer,
     required this.incorrectAnswers,
-  }) : allAnswers = List<String>.from(incorrectAnswers)..add(correctAnswer)..shuffle();
+  }) : allAnswers = List<String>.from(incorrectAnswers)
+          ..add(correctAnswer)
+          ..shuffle();
 
   factory Question.fromJson(Map<String, dynamic> json) {
+    final questionField = json['question'];
+    final questionText =
+        questionField is Map ? questionField['text'] : questionField;
+
     return Question(
       id: json['id'] ?? '',
       category: json['category'] ?? '',
       type: json['type'] ?? '',
       difficulty: json['difficulty'] ?? '',
-      question: json['question']['text'] ?? '',
+      question: questionText ?? '',
       correctAnswer: json['correctAnswer'] ?? '',
       incorrectAnswers: List<String>.from(json['incorrectAnswers'] ?? []),
     );
@@ -36,7 +42,7 @@ class Question {
       'category': category,
       'type': type,
       'difficulty': difficulty,
-      'question': {'text': question},
+      'question': question,
       'correctAnswer': correctAnswer,
       'incorrectAnswers': incorrectAnswers,
     };

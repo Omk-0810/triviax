@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
-import '../../providers/quiz_provider.dart';
+
 import '../../config/app_routes.dart';
+import '../../providers/quiz/quiz_provider.dart';
 
 class QuizScreen extends ConsumerWidget {
   const QuizScreen({super.key});
@@ -51,13 +51,16 @@ class QuizScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Question ${quizState.currentIndex + 1}/${quizState.questions.length}'),
+        title: Text(
+            'Question ${quizState.currentIndex + 1}/${quizState.questions.length}'),
         actions: [
           Row(
             children: List.generate(
               3,
               (index) => Icon(
-                index < quizState.lives ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                index < quizState.lives
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
                 color: Colors.red,
               ),
             ),
@@ -91,9 +94,10 @@ class QuizScreen extends ConsumerWidget {
                     Text(
                       currentQuestion.question,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                     ),
                   ],
                 ),
@@ -111,14 +115,17 @@ class QuizScreen extends ConsumerWidget {
                     answer: answer,
                     quizState: quizState,
                     correctAnswer: currentQuestion.correctAnswer,
-                    onTap: () => ref.read(quizProvider.notifier).answerQuestion(answer),
+                    onTap: () =>
+                        ref.read(quizProvider.notifier).answerQuestion(answer),
                   );
                 },
               ),
             ),
             const SizedBox(height: 16),
             TextButton.icon(
-              onPressed: quizState.selectedAnswer != null ? null : () => ref.read(quizProvider.notifier).skipQuestion(),
+              onPressed: quizState.selectedAnswer != null
+                  ? null
+                  : () => ref.read(quizProvider.notifier).skipQuestion(),
               icon: const Icon(Icons.skip_next_rounded),
               label: const Text('Skip Question (-5 Marks)'),
             ),
@@ -154,8 +161,10 @@ class QuizScreen extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 0,
-        backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.surfaceContainerHighest,
-        foregroundColor: foregroundColor ?? Theme.of(context).colorScheme.onSurfaceVariant,
+        backgroundColor: backgroundColor ??
+            Theme.of(context).colorScheme.surfaceContainerHighest,
+        foregroundColor:
+            foregroundColor ?? Theme.of(context).colorScheme.onSurfaceVariant,
         disabledBackgroundColor: backgroundColor,
         disabledForegroundColor: foregroundColor,
       ),
